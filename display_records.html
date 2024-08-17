@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <link rel="stylesheet" type="text/css" href="/static/styles.css">
+
+    <title>Display Records</title>
+</head>
+<body>
+    <h1>Records</h1>
+    <form method="POST" action="/display_records">
+        <label for="firstname">Search by First Name:</label><br>
+        <input type="text" id="firstname" name="firstname"><br>
+        <input type="submit" value="Search">
+    </form>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Zipcode</th>
+            <th>Birthday</th>
+            <th>Email</th>
+            <th>Phone1</th>
+            <th>Phone2</th>
+            <th>Comment</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+            <td>{{ record[0] }}</td>
+            <td>{{ record[2] }}</td>
+            <td>{{ record[3] }}</td>
+            <td>{{ record[4] }}</td>
+            <td>{{ record[5] }}</td>
+            <td>{{ record[6] }}</td>
+            <td>{{ record[7] }}</td>
+            <td>{{ record[8] }}</td>
+            <td>{{ record[9] }}</td>
+            <td>{{ record[10] }}</td>
+            <td>{{ record[11] }}</td>
+            <td>{{ record[12] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="/menu">Go to Home</a>
+    <a href="/entry">Go to Data Entry</a>
+</body>
+</html>

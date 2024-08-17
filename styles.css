@@ -1,0 +1,48 @@
+/* Default styles for larger screens (desktop) */
+body {
+    background-color: lightblue;
+    text-align: center;
+    font-size: 24px;
+    padding: 50px;
+}
+
+h1.page-title {
+    color: navy;
+    margin: 0; /* Set margin to 0 to position it at the top */
+}
+
+/* Add a class for the wide scrollbar */
+.wide-scrollbar {
+    max-width: 100%; /* Limit the width to the screen width */
+}
+
+/* Style for the scrollbar */
+.wide-scrollbar::-webkit-scrollbar {
+    width: 20px; /* Adjust the width as needed */
+}
+
+/* Style for the scrollbar thumb */
+.wide-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Media query for smaller screens (tablets) */
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 18px; /* Adjust font size for tablets */
+        padding: 20px;
+    }
+
+    h1.page-title {
+        font-size: 24px; /* Adjust font size for tablets */
+    }
+
+    /* Move the play button below the combo box and increase its size */
+    #video-selector input[type="submit"] {
+        display: block; /* Display the button as a block element */
+        font-size: 32px; /* Increase the font size for larger buttons */
+        padding: 20px; /* Increase padding for touch-friendly interaction */
+    }
+
+    /* Add tablet-specific styles here */
+}
