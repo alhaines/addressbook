@@ -1,0 +1,28 @@
+<!--
+  filename:   /home/al/projects/AddressBook_v2/templates/view_contact.html
+-->
+{% extends "layout.html" %}
+{% block title %}View Contact{% endblock %}
+{% block content %}
+    <h2>{{ contact.firstname }} {{ contact.lastname }}</h2>
+
+    <div class="contact-details">
+        <p><strong>Address:</strong> {{ contact.address or 'N/A' }}</p>
+        <p><strong>City:</strong> {{ contact.city or 'N/A' }}</p>
+        <p><strong>State:</strong> {{ contact.state or 'N/A' }}</p>
+        <p><strong>Zipcode:</strong> {{ contact.zipcode or 'N/A' }}</p>
+        <hr>
+        <p><strong>Birthday:</strong> {{ contact.birthday or 'N/A' }}</p>
+        <p><strong>Email:</strong> {{ contact.email or 'N/A' }}</p>
+        <p><strong>Primary Phone:</strong> {{ contact.phone1 or 'N/A' }}</p>
+        <p><strong>Secondary Phone:</strong> {{ contact.phone2 or 'N/A' }}</p>
+        <hr>
+        <p><strong>Comment:</strong></p>
+        <pre>{{ contact.comment or 'No comment.' }}</pre>
+    </div>
+
+    <div class="form-actions">
+        <a href="{{ url_for('list_contacts_route') }}" class="button cancel">Back to List</a>
+        <a href="{{ url_for('edit_contact_route', contact_id=contact.id) }}" class="button">Edit This Contact</a>
+    </div>
+{% endblock %}

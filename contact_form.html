@@ -1,0 +1,58 @@
+<!--
+  filename:   /home/al/projects/AddressBook_v2/templates/contact_form.html
+-->
+{% extends "layout.html" %}
+{% block title %}{{ form_title }}{% endblock %}
+{% block content %}
+    <h2>{{ form_title }}</h2>
+    <form method="post" class="contact-form">
+        <div class="form-group">
+            <label>First Name</label>
+            <input type="text" name="firstname" value="{{ contact.firstname or '' }}" required>
+        </div>
+        <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" name="lastname" value="{{ contact.lastname or '' }}" required>
+        </div>
+        <div class="form-group">
+            <label>Address</label>
+            <input type="text" name="address" value="{{ contact.address or '' }}">
+        </div>
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" value="{{ contact.city or '' }}">
+        </div>
+        <div class="form-group">
+            <label>State</label>
+            <input type="text" name="state" value="{{ contact.state or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Zipcode</label>
+            <input type="text" name="zipcode" value="{{ contact.zipcode or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Birthday</label>
+            <input type="text" name="birthday" value="{{ contact.birthday or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="{{ contact.email or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Primary Phone</label>
+            <input type="tel" name="phone1" value="{{ contact.phone1 or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Secondary Phone</label>
+            <input type="tel" name="phone2" value="{{ contact.phone2 or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Comment</label>
+            <textarea name="comment">{{ contact.comment or '' }}</textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="button">Save Contact</button>
+            <a href="{{ url_for('list_contacts_route') }}" class="button cancel">Cancel</a>
+        </div>
+    </form>
+{% endblock %}

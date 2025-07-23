@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-        <link rel="stylesheet" type="text/css" href="/static/styles.css">
-
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
-    <form action="/login" method="post">
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username"><br>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password"><br><br>
-        <input type="submit" value="Submit">
+<!--
+  filename:   /home/al/projects/AddressBook_v2/templates/login.html
+-->
+{% extends "layout.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+    <h2>Login</h2>
+    <form method="post">
+        <p><label for="username">Username:</label><br><input type="text" name="username" id="username" required></p>
+        <p><label for="password">Password:</label><br><input type="password" name="password" id="password" required></p>
+        <p><button type="submit">Login</button></p>
     </form>
-    <p>New user? <a href="/register">Register here</a></p>
-</body>
-</html>
+    <p>New user? <a href="{{ url_for('register') }}">Register here</a>.</p>
+{% endblock %}

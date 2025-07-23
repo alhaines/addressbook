@@ -1,0 +1,47 @@
+." addressbook.1 - Manual page for the AddressBook Flask Application
+."
+." Copyright 2025 AL Haines
+."
+.TH addressbook 1 "July 2025" "AddressBook v2.0" "User Commands"
+
+.SH NAME
+addressbook \- A simple, secure, multi-user web-based address book.
+
+.SH DESCRIPTION
+.B AddressBook
+is a web application built with the Python Flask framework. It provides a clean interface for multiple users to register, log in, and manage a personal, private list of contacts.
+
+All application data, including user accounts and contact details, is stored in a MySQL database. User passwords are not stored in plaintext; they are securely hashed to protect user privacy.
+
+The application is designed to be run as a service, preferably using a production-grade WSGI server like Gunicorn, and managed by a systemd service file.
+
+.SH INSTALLATION
+Please refer to the \fBREADME.md\fP file included with the project source code for detailed, step-by-step installation instructions. The installation involves setting up a dedicated MySQL database, configuring the connection, and installing Python dependencies via a `requirements.txt` file.
+
+.SH FILE STRUCTURE
+The application follows a standard Flask project structure.
+.TP
+.I app.py
+The main Flask application file. It contains the URL routing and calls to the logic module.
+.TP
+.I OV_addressbook.py
+The "view logic" module. Contains all the core functions for user authentication and contact management (add, edit, list, delete).
+.TP
+.I config.py
+The project-specific configuration file. It defines the MySQL database credentials and the Flask secret key.
+.TP
+.I MySql.py
+A symbolic link to the global database connection module, used for all database interactions.
+.TP
+.I templates/
+A directory containing all the HTML templates used to render the web pages.
+.TP
+.I static/
+A directory containing the CSS stylesheet for the application.
+.TP
+.I addressbook_schema_v2.sql
+The SQL script required to create the necessary `users` and `contacts` tables in the database.
+
+.SH AUTHOR
+Originally conceived and coded by AL Haines.
+Refactored and modernized in collaboration with Google Gemini.

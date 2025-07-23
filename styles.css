@@ -1,48 +1,76 @@
-/* Default styles for larger screens (desktop) */
+/*
+ * filename:   /home/al/projects/AddressBook_v2/static/styles.css
+ */
+
 body {
-    background-color: lightblue;
-    text-align: center;
-    font-size: 24px;
-    padding: 50px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #1c1e21;
+    margin: 0;
+    padding: 2em;
 }
 
-h1.page-title {
-    color: navy;
-    margin: 0; /* Set margin to 0 to position it at the top */
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: #ffffff;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* Add a class for the wide scrollbar */
-.wide-scrollbar {
-    max-width: 100%; /* Limit the width to the screen width */
+h1, h2 {
+    color: #005a9c;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5em;
 }
 
-/* Style for the scrollbar */
-.wide-scrollbar::-webkit-scrollbar {
-    width: 20px; /* Adjust the width as needed */
+/* Flash messages for feedback */
+.flashes { list-style: none; padding: 0; margin-bottom: 1em; }
+.flashes .success { background: #d4edda; color: #155724; padding: 1em; border-radius: 4px; }
+.flashes .error { background: #f8d7da; color: #721c24; padding: 1em; border-radius: 4px; }
+
+/* Table styling */
+table { width: 100%; border-collapse: collapse; margin-top: 1em; }
+th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+th { background-color: #f8f9fa; }
+tr:nth-child(even) { background-color: #fdfdfd; }
+
+/* Form styling */
+.contact-form .form-group, .form-actions { margin-bottom: 1em; }
+.contact-form label { display: block; margin-bottom: 5px; font-weight: bold; }
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form input[type="tel"],
+.contact-form input[type="password"],
+.contact-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Important for padding and width */
 }
+textarea { resize: vertical; }
 
-/* Style for the scrollbar thumb */
-.wide-scrollbar::-webkit-scrollbar-thumb {
-    background: #888;
+/* Button and Link styles */
+.button, button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
+.button:hover, button:hover { background-color: #0056b3; }
+.button.logout, .delete-btn { background-color: #dc3545; }
+.button.logout:hover, .delete-btn:hover { background-color: #c82333; }
+.button.cancel { background-color: #6c757d; }
+.button.cancel:hover { background-color: #5a6268; }
 
-/* Media query for smaller screens (tablets) */
-@media screen and (max-width: 768px) {
-    body {
-        font-size: 18px; /* Adjust font size for tablets */
-        padding: 20px;
-    }
-
-    h1.page-title {
-        font-size: 24px; /* Adjust font size for tablets */
-    }
-
-    /* Move the play button below the combo box and increase its size */
-    #video-selector input[type="submit"] {
-        display: block; /* Display the button as a block element */
-        font-size: 32px; /* Increase the font size for larger buttons */
-        padding: 20px; /* Increase padding for touch-friendly interaction */
-    }
-
-    /* Add tablet-specific styles here */
-}
+.header { display: flex; justify-content: space-between; align-items: center; }
+.main-menu-link { text-align: center; margin-top: 2em; }

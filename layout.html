@@ -1,0 +1,33 @@
+<!--
+  filename:   /home/al/projects/AddressBook_v2/templates/layout.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Links to our new, consistent stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>{% block title %}Address Book{% endblock %}</title>
+</head>
+<body>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+
+        <!-- Adds the consistent link back to your main menu -->
+        <div class="main-menu-link">
+            <a href="https://alhainesusa.tech/cgi-bin/menu.py" class="button cancel">Main Menu</a>
+        </div>
+    </div>
+</body>
+</html>

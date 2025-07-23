@@ -1,125 +1,116 @@
-from flask import Flask, render_template, request, redirect, session, url_for
-import pymysql
-from config import DATABASE_CONFIG
+#!/home/al/miniconda3/envs/py/bin/python3
+# -*- coding: utf-8 -*-
+#
+# filename:   /home/al/projects/AddressBook_v2/app.py
+#
+# v2.3: Adds the route for viewing full contact details.
+
+from flask import Flask, render_template, request, redirect, session, url_for, flash
+from functools import wraps
+from werkzeug.security import generate_password_hash, check_password_hash
+import sys
+sys.path.append('/home/al/py')
+from MySql import MySQL
+import config
+import OV_addressbook
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = config.SECRET_KEY
+db = MySQL(**config.mysql_config)
 
-# Database connection
-db = pymysql.connect(**DATABASE_CONFIG)
-cursor = db.cursor()
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash("You must be logged in to view this page.", "error")
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
-# Create users table if it doesn't exist
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
-);
-""")
-
-# Create addresses table if it doesn't exist
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS addresses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    firstname VARCHAR(255) NOT NULL,
-    lastname VARCHAR(255) NOT NULL,
-    address VARCHAR(255),
-    city VARCHAR(255),
-    state VARCHAR(255),
-    zipcode VARCHAR(10),
-    birthday VARCHAR(20),
-    email VARCHAR(255),
-    phone1 VARCHAR(20),
-    phone2 VARCHAR(20),
-    comment TEXT,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-""")
-db.commit()
-
+# --- User Routes (Unchanged) ---
 @app.route('/')
+def home():
+    return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user_data = db.get_data("SELECT id, username, password_hash FROM users WHERE username = %s", (username,))
+        if user_data and check_password_hash(user_data[0]['password_hash'], password):
+            session['user_id'] = user_data[0]['id']
+            session['username'] = user_data[0]['username']
+            flash(f"Welcome back, {session['username']}!", "success")
+            return redirect(url_for('list_contacts_route'))
+        else:
+            flash("Login failed.", "error")
     return render_template('login.html')
-
-@app.route('/login', methods=['POST'])
-def login_post():
-    username = request.form['username']
-    password = request.form['password']
-    cursor.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
-    user = cursor.fetchone()
-
-    if user:
-        session['user_id'] = user[0]
-        session['username'] = user[1]
-        return redirect(url_for('menu'))
-    else:
-        return "Login failed. Please check your username and password."
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
-        db.commit()
-        return redirect(url_for('registration_success'))
-
-    return render_template('registration.html')
-
-@app.route('/registration_success')
-def registration_success():
-    return render_template('registration_success.html')
-
-@app.route('/menu')
-def menu():
-    if 'username' in session:
-        return render_template('menu.html', username=session['username'])
-    else:
-        return redirect(url_for('login'))
-
-@app.route('/entry', methods=['GET', 'POST'])
-def data_entry():
-    if request.method == 'POST':
-        user_id = session['user_id']
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
-        address = request.form['address']
-        city = request.form['city']
-        state = request.form['state']
-        zipcode = request.form['zipcode']
-        birthday = request.form['birthday']
-        email = request.form['email']
-        phone1 = request.form['phone1']
-        phone2 = request.form['phone2']
-        comment = request.form['comment']
-
-        cursor.execute("""
-            INSERT INTO addresses (user_id, firstname, lastname, address, city, state, zipcode, birthday, email, phone1, phone2, comment)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (user_id, firstname, lastname, address, city, state, zipcode, birthday, email, phone1, phone2, comment))
-        db.commit()
-
-        return redirect(url_for('display_records'))
-
-    return render_template('data_entry.html')
-
-@app.route('/display_records', methods=['GET', 'POST'])
-def display_records():
-    if request.method == 'POST':
         firstname = request.form.get('firstname')
-        cursor.execute("SELECT * FROM addresses WHERE firstname LIKE %s AND user_id=%s", ('%' + firstname + '%', session['user_id']))
-    else:
-        cursor.execute("SELECT * FROM addresses WHERE user_id=%s", (session['user_id'],))
-
-    records = cursor.fetchall()
-    return render_template('display_records.html', records=records)
+        lastname = request.form.get('lastname')
+        address = request.form.get('address')
+        city = request.form.get('city')
+        state = request.form.get('state')
+        zipcode = request.form.get('zipcode')
+        birthday = request.form.get('birthday')
+        email = request.form.get('email')
+        phone1 = request.form.get('phone1')
+        phone2 = request.form.get('phone2')
+        comment = request.form.get('comment')
+        if db.get_data("SELECT id FROM users WHERE username = %s", (username,)):
+            flash("That username is already taken.", "error")
+            return render_template('register.html')
+        password_hash = generate_password_hash(password)
+        query = """
+            INSERT INTO users (username, password_hash, firstname, lastname, address, city, state,
+                               zipcode, birthday, email, phone1, phone2, comment)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        params = (username, password_hash, firstname, lastname, address, city, state,
+                  zipcode, birthday, email, phone1, phone2, comment)
+        db.put_data(query, params)
+        flash("Registration successful! You can now log in.", "success")
+        return redirect(url_for('login'))
+    return render_template('register.html')
 
 @app.route('/logout')
 def logout():
     session.clear()
+    flash("You have been logged out.", "success")
     return redirect(url_for('login'))
 
+# --- Application Routes ---
+@app.route('/contacts')
+@login_required
+def list_contacts_route():
+    return OV_addressbook.list_contacts()
+
+# --- NEW ROUTE ---
+@app.route('/contacts/view/<int:contact_id>')
+@login_required
+def view_contact_route(contact_id):
+    return OV_addressbook.view_contact(contact_id)
+
+@app.route('/contacts/add', methods=['GET', 'POST'])
+@login_required
+def add_contact_route():
+    return OV_addressbook.add_contact()
+
+@app.route('/contacts/edit/<int:contact_id>', methods=['GET', 'POST'])
+@login_required
+def edit_contact_route(contact_id):
+    return OV_addressbook.edit_contact(contact_id)
+
+@app.route('/contacts/delete/<int:contact_id>', methods=['POST'])
+@login_required
+def delete_contact_route(contact_id):
+    return OV_addressbook.delete_contact(contact_id)
+
 if __name__ == '__main__':
-    app.run(host='192.168.12.2', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5008, debug=True)
